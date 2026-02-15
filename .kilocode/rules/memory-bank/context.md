@@ -1,10 +1,10 @@
-# Active Context: Next.js Starter Template
+# Active Context: The Worst Newsletter Ever
 
 ## Current State
 
-**Template Status**: ✅ Ready for development
+**Project Status**: ✅ Core feature complete — worst newsletter with 3-phase hideous form
 
-The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. It's ready for AI-assisted expansion to build any type of application.
+The app is a deliberately terrible newsletter signup experience for a "worst website hackathon". Users must fill out an increasingly absurd multi-phase form to access a newsletter that has no content.
 
 ## Recently Completed
 
@@ -14,74 +14,38 @@ The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. I
 - [x] ESLint configuration
 - [x] Memory bank documentation
 - [x] Recipe system for common features
+- [x] 3-phase hideous signup form
+- [x] Phase 1: Basic fields (name, last name, email, password)
+- [x] Phase 2: Extended fields with red warning (middle name, birthdate chaos picker, country by phone prefix)
+- [x] Phase 3: 20+ absurd fields with input hijacking and field selector alternation
+- [x] Newsletter page with waste-o-meter showing time wasted vs activities
+- [x] 90s retro styling (Comic Sans, teal/purple/yellow, marquee, blink)
+- [x] Fade/unfade mechanic for phase 2 (text fades as user types, un-fade button appears progressively)
+- [x] Tab/Enter hijacking in phase 3 (scrolls to random position)
+- [x] Birthdate picker with "Before"/"After" random date narrowing
+- [x] Country selection by phone prefix only
 
 ## Current Structure
 
 | File/Directory | Purpose | Status |
 |----------------|---------|--------|
-| `src/app/page.tsx` | Home page | ✅ Ready |
-| `src/app/layout.tsx` | Root layout | ✅ Ready |
-| `src/app/globals.css` | Global styles | ✅ Ready |
+| `src/app/page.tsx` | Main page with all form phases + newsletter | ✅ Complete |
+| `src/app/layout.tsx` | Root layout with metadata | ✅ Updated |
+| `src/app/globals.css` | 90s retro styles + animations (marquee, blink) | ✅ Updated |
 | `.kilocode/` | AI context & recipes | ✅ Ready |
 
-## Current Focus
+## Key Design Decisions
 
-The template is ready. Next steps depend on user requirements:
-
-1. What type of application to build
-2. What features are needed
-3. Design/branding preferences
-
-## Quick Start Guide
-
-### To add a new page:
-
-Create a file at `src/app/[route]/page.tsx`:
-```tsx
-export default function NewPage() {
-  return <div>New page content</div>;
-}
-```
-
-### To add components:
-
-Create `src/components/` directory and add components:
-```tsx
-// src/components/ui/Button.tsx
-export function Button({ children }: { children: React.ReactNode }) {
-  return <button className="px-4 py-2 bg-blue-600 text-white rounded">{children}</button>;
-}
-```
-
-### To add a database:
-
-Follow `.kilocode/recipes/add-database.md`
-
-### To add API routes:
-
-Create `src/app/api/[route]/route.ts`:
-```tsx
-import { NextResponse } from "next/server";
-
-export async function GET() {
-  return NextResponse.json({ message: "Hello" });
-}
-```
-
-## Available Recipes
-
-| Recipe | File | Use Case |
-|--------|------|----------|
-| Add Database | `.kilocode/recipes/add-database.md` | Data persistence with Drizzle + SQLite |
-
-## Pending Improvements
-
-- [ ] Add more recipes (auth, email, etc.)
-- [ ] Add example components
-- [ ] Add testing setup recipe
+- Single client component (`page.tsx`) manages all state and phases
+- Form data is never stored — users must re-fill every visit
+- Phase transitions: submit → warning → new fields appear
+- Waste-o-meter calculates time spent and compares to fun activities
+- Field selector alternation in Phase 3 (clicking field X focuses field Y)
+- Derived state for fade mechanic (no useEffect for setState)
 
 ## Session History
 
 | Date | Changes |
 |------|---------|
 | Initial | Template created with base setup |
+| 2026-02-15 | Built the worst newsletter ever with 3-phase form, waste-o-meter, 90s styling |
