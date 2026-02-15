@@ -24,6 +24,10 @@ The app is a deliberately terrible newsletter signup experience for a "worst web
 - [x] Tab/Enter hijacking in phase 3 (scrolls to random position)
 - [x] Birthdate picker with "Before"/"After" random date narrowing
 - [x] Country selection by phone prefix only
+- [x] Fade mechanic extended to phase 2+ (all fields from phase 2 onwards trigger fade)
+- [x] Fade rate changed to 0–9999 keystrokes (extremely slow fade)
+- [x] Unfade button alert chain when clicked before enabled
+- [x] Phase 3 fields also trigger fade on input
 
 ## Current Structure
 

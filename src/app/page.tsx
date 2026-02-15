@@ -197,20 +197,28 @@ export default function Home() {
   // Scroll container ref
   const pageRef = useRef<HTMLDivElement>(null);
 
-  /* ─── Phase 2 fade mechanic (derived) ─── */
-  const fadeOpacity = Math.max(0, 1 - charCount / 80);
-  const unfadeVisible = Math.min(1, charCount / 80);
+  /* ─── Fade mechanic (derived) — 0 to 9999 keystrokes ─── */
+  const FADE_KEYSTROKES = 9999;
+  const fadeOpacity = Math.max(0, 1 - charCount / FADE_KEYSTROKES);
+  const unfadeVisible = Math.min(1, charCount / FADE_KEYSTROKES);
   const unfadeEnabled = fadeOpacity <= 0.05;
 
-  const handlePhase2Input = useCallback(() => {
+  const handleFadeInput = useCallback(() => {
     setCharCount((c) => c + 1);
     setUnfadeUsed(false);
   }, []);
 
   const handleUnfade = useCallback(() => {
+    if (!unfadeEnabled) {
+      alert("🚫 The page ain't faded enough yet! Keep typing!");
+      setTimeout(() => {
+        alert("Wait... did you actually understand what that meant? 🤔");
+      }, 100);
+      return;
+    }
     setUnfadeUsed(true);
     setCharCount(0);
-  }, []);
+  }, [unfadeEnabled]);
 
   /* ─── Phase 3: generate shuffled field mapping ─── */
   const generateFieldMapping = useCallback(() => {
@@ -458,7 +466,6 @@ export default function Home() {
       {phase >= 2 && (
         <button
           onClick={handleUnfade}
-          disabled={!unfadeEnabled}
           className="fixed top-4 right-4 z-50 px-4 py-2 font-bold font-mono text-sm transition-all"
           style={{
             opacity: unfadeVisible,
@@ -489,7 +496,7 @@ export default function Home() {
       {/* Form container */}
       <div
         className={`${retroBorder} bg-black p-6 max-w-2xl mx-auto mb-8`}
-        style={phase === 2 ? { opacity: fadeOpacity, transition: "opacity 0.3s" } : {}}
+        style={phase >= 2 ? { opacity: fadeOpacity, transition: "opacity 0.3s" } : {}}
       >
         {/* ─── PHASE 1: Basic fields ─── */}
         <fieldset className="mb-6">
@@ -505,7 +512,7 @@ export default function Home() {
                 value={firstName}
                 onChange={(e) => {
                   setFirstName(e.target.value);
-                  if (phase === 2) handlePhase2Input();
+                  if (phase >= 2) handleFadeInput();
                 }}
                 className={retroInput}
                 placeholder="Enter your first name..."
@@ -518,7 +525,7 @@ export default function Home() {
                 value={lastName}
                 onChange={(e) => {
                   setLastName(e.target.value);
-                  if (phase === 2) handlePhase2Input();
+                  if (phase >= 2) handleFadeInput();
                 }}
                 className={retroInput}
                 placeholder="Enter your last name..."
@@ -531,7 +538,7 @@ export default function Home() {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  if (phase === 2) handlePhase2Input();
+                  if (phase >= 2) handleFadeInput();
                 }}
                 className={retroInput}
                 placeholder="definitely_real@email.com"
@@ -544,7 +551,7 @@ export default function Home() {
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
-                  if (phase === 2) handlePhase2Input();
+                  if (phase >= 2) handleFadeInput();
                 }}
                 className={retroInput}
                 placeholder="hunter2"
@@ -577,7 +584,7 @@ export default function Home() {
                   value={middleName}
                   onChange={(e) => {
                     setMiddleName(e.target.value);
-                    handlePhase2Input();
+                    handleFadeInput();
                   }}
                   className={`${retroInput} border-red-500`}
                   placeholder="If you don't have one, make one up"
@@ -671,11 +678,13 @@ export default function Home() {
                     }}
                     type="text"
                     value={phase3Values[fieldName] ?? ""}
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setPhase3Values((prev) => ({
                         ...prev,
                         [fieldName]: e.target.value,
-                      }))
+                      }));
+                      handleFadeInput();
+                    }
                     }
                     onClick={(e) => {
                       e.stopPropagation();
