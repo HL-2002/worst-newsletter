@@ -140,6 +140,251 @@ function formatDate(d: Date): string {
   });
 }
 
+/* ─── 90s Infomercial Ads ─── */
+const INFOMERCIAL_ADS = [
+  {
+    title: "🔥 MEGA SLICER 3000 🔥",
+    body: "It slices! It dices! It makes julienne fries! ORDER NOW and get a SECOND Mega Slicer absolutely FREE!*",
+    fine: "*Just pay separate processing and handling of $49.99",
+    bg: "linear-gradient(135deg, #ff6600, #ff0066)",
+    phone: "1-800-SLICER",
+  },
+  {
+    title: "💪 AB-BLASTER EXTREME 💪",
+    body: "Get ROCK HARD ABS in just 3 minutes a day! As seen on TV! Results NOT typical!",
+    fine: "Consult your doctor. Side effects include looking TOO good.",
+    bg: "linear-gradient(135deg, #cc0000, #990066)",
+    phone: "1-800-ABS-NOW",
+  },
+  {
+    title: "🧹 SUPER SHAMWOW DELUXE 🧹",
+    body: "It holds 20x its weight in liquid! You'll say WOW every time! German engineering!",
+    fine: "Not actually German. Not actually engineering.",
+    bg: "linear-gradient(135deg, #0066cc, #00cccc)",
+    phone: "1-800-SHAMWOW",
+  },
+  {
+    title: "💎 CUBIC ZIRCONIA COLLECTION 💎",
+    body: "REAL* diamonds at UNREAL prices! Each stone is hand-inspected by our team of experts!",
+    fine: "*Not real diamonds. Experts are interns.",
+    bg: "linear-gradient(135deg, #9900cc, #ff66cc)",
+    phone: "1-800-BLING",
+  },
+  {
+    title: "🍳 SET IT AND FORGET IT! 🍳",
+    body: "The Ronco Rotisserie! Makes perfect chicken EVERY time! Your family will LOVE you!",
+    fine: "Family love not guaranteed. Chicken may vary.",
+    bg: "linear-gradient(135deg, #cc6600, #ffcc00)",
+    phone: "1-800-RONCO",
+  },
+  {
+    title: "📞 PSYCHIC HOTLINE 📞",
+    body: "Miss Cleo KNOWS your future! Call NOW for your FREE* reading! The cards never lie!",
+    fine: "*First 30 seconds free. $4.99/min after. For entertainment only.",
+    bg: "linear-gradient(135deg, #330066, #6600cc)",
+    phone: "1-900-PSYCHIC",
+  },
+  {
+    title: "🎵 NOW THAT'S WHAT I CALL MUSIC 🎵",
+    body: "47 ORIGINAL hits! Macarena! MMMBop! Barbie Girl! All on ONE CD! Not available in stores!",
+    fine: "Available in stores. We lied.",
+    bg: "linear-gradient(135deg, #009900, #66ff00)",
+    phone: "1-800-MUSIC",
+  },
+  {
+    title: "🦷 DENTAWHITE 9000 🦷",
+    body: "Whiter teeth in SECONDS! Just apply and SMILE! Dentists HATE this one weird trick!",
+    fine: "Dentists don't hate it. They've never heard of it.",
+    bg: "linear-gradient(135deg, #ffffff, #66ccff)",
+    phone: "1-800-TEETH",
+  },
+  {
+    title: "🏋️ THIGHMASTER ULTRA 🏋️",
+    body: "Suzanne Somers approved! Tone your thighs while watching TV! It's THAT easy!",
+    fine: "Nothing is that easy. Suzanne was paid.",
+    bg: "linear-gradient(135deg, #ff3399, #ff9933)",
+    phone: "1-800-THIGHS",
+  },
+  {
+    title: "🌊 CHIA PET PLATINUM EDITION 🌊",
+    body: "Ch-ch-ch-CHIA! The pottery that GROWS! New shapes: Chia Biden! Chia Shrek! Chia Chia Pet!",
+    fine: "Seeds may not sprout. Chia Shrek is just a green blob.",
+    bg: "linear-gradient(135deg, #006600, #33cc33)",
+    phone: "1-800-CHIA",
+  },
+  {
+    title: "⚡ FLEX TAPE ⚡",
+    body: "I SAWED THIS BOAT IN HALF! And repaired it with ONLY Flex Tape! That's a LOT of damage!",
+    fine: "Do not saw boats in half. We are not responsible.",
+    bg: "linear-gradient(135deg, #000000, #333333)",
+    phone: "1-800-FLEX",
+  },
+  {
+    title: "🎮 GAME GENIE ULTRA 🎮",
+    body: "UNLIMITED LIVES! INFINITE POWER! Beat ANY game with our SECRET codes! Your friends will be JEALOUS!",
+    fine: "Friends may stop playing with you entirely.",
+    bg: "linear-gradient(135deg, #0000cc, #6666ff)",
+    phone: "1-800-GENIE",
+  },
+];
+
+interface AdState {
+  id: number;
+  adIndex: number;
+  x: number;
+  y: number;
+}
+
+/* ─── Draggable Ad Component ─── */
+function InfomercialAd({
+  ad,
+  position,
+  onDragStart,
+  onDragMove,
+  onDragEnd,
+}: {
+  ad: (typeof INFOMERCIAL_ADS)[number];
+  position: { x: number; y: number };
+  onDragStart: (e: React.PointerEvent) => void;
+  onDragMove: (e: React.PointerEvent) => void;
+  onDragEnd: () => void;
+}) {
+  return (
+    <div
+      onPointerDown={onDragStart}
+      onPointerMove={onDragMove}
+      onPointerUp={onDragEnd}
+      onPointerCancel={onDragEnd}
+      style={{
+        position: "fixed",
+        left: position.x,
+        top: position.y,
+        zIndex: 9999,
+        width: 280,
+        background: ad.bg,
+        border: "4px outset #ffcc00",
+        boxShadow: "4px 4px 0px #000, inset 0 0 20px rgba(255,255,255,0.2)",
+        fontFamily: '"Comic Sans MS", cursive',
+        cursor: "grab",
+        touchAction: "none",
+        userSelect: "none",
+      }}
+    >
+      {/* Title bar */}
+      <div
+        style={{
+          background: "linear-gradient(90deg, #000080, #1084d0)",
+          padding: "2px 6px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          borderBottom: "2px solid #ffcc00",
+        }}
+      >
+        <span style={{ color: "#fff", fontSize: 11, fontWeight: "bold" }}>
+          ⚠️ SPECIAL OFFER ⚠️
+        </span>
+        <span
+          style={{
+            background: "#c0c0c0",
+            border: "2px outset #fff",
+            width: 16,
+            height: 16,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 10,
+            fontWeight: "bold",
+            color: "#000",
+            cursor: "not-allowed",
+          }}
+          title="Nice try! This ad cannot be closed."
+          onClick={(e) => {
+            e.stopPropagation();
+            alert("🚫 Nice try! This ad is PERMANENT. Just like regret.");
+          }}
+        >
+          ✕
+        </span>
+      </div>
+      {/* Content */}
+      <div style={{ padding: 10 }}>
+        <h3
+          style={{
+            color: "#ffff00",
+            fontSize: 16,
+            fontWeight: "bold",
+            textAlign: "center",
+            textShadow: "2px 2px 0px #000",
+            marginBottom: 6,
+          }}
+        >
+          {ad.title}
+        </h3>
+        <p
+          style={{
+            color: "#fff",
+            fontSize: 12,
+            textAlign: "center",
+            marginBottom: 8,
+            textShadow: "1px 1px 0px #000",
+          }}
+        >
+          {ad.body}
+        </p>
+        <div
+          style={{
+            background: "#ffff00",
+            color: "#cc0000",
+            fontWeight: "bold",
+            fontSize: 14,
+            textAlign: "center",
+            padding: "4px 8px",
+            border: "2px solid #cc0000",
+            marginBottom: 6,
+          }}
+        >
+          CALL NOW: {ad.phone}
+        </div>
+        <p
+          style={{
+            color: "rgba(255,255,255,0.5)",
+            fontSize: 8,
+            textAlign: "center",
+          }}
+        >
+          {ad.fine}
+        </p>
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: 6,
+          }}
+        >
+          <span
+            style={{
+              background: "#ff0000",
+              color: "#fff",
+              fontWeight: "bold",
+              fontSize: 11,
+              padding: "2px 10px",
+              border: "2px outset #ff6666",
+              cursor: "pointer",
+              display: "inline-block",
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              alert("📞 Just kidding! There's nothing to order. But thanks for clicking!");
+            }}
+          >
+            🛒 ORDER NOW!!!
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Marquee text ─── */
 function MarqueeText({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
@@ -193,6 +438,53 @@ export default function Home() {
 
   // Refs for phase 3 inputs
   const phase3Refs = useRef<(HTMLInputElement | null)[]>([]);
+
+  // Ads state
+  const [ads, setAds] = useState<AdState[]>([]);
+  const adCountRef = useRef(0);
+  const dragRef = useRef<{ adId: number; offsetX: number; offsetY: number } | null>(null);
+
+  // Spawn an ad every 60 seconds
+  useEffect(() => {
+    const spawnAd = () => {
+      const id = adCountRef.current++;
+      const adIndex = id % INFOMERCIAL_ADS.length;
+      // Random position near center with some jitter
+      const x = Math.max(20, Math.min(window.innerWidth - 300, window.innerWidth / 2 - 140 + (Math.random() - 0.5) * 200));
+      const y = Math.max(20, Math.min(window.innerHeight - 300, window.innerHeight / 2 - 150 + (Math.random() - 0.5) * 200));
+      setAds((prev) => [...prev, { id, adIndex, x, y }]);
+    };
+
+    // First ad after 60 seconds
+    const interval = setInterval(spawnAd, 60_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Drag handlers for ads
+  const handleAdDragStart = useCallback((adId: number, e: React.PointerEvent) => {
+    const adEl = e.currentTarget as HTMLElement;
+    const rect = adEl.getBoundingClientRect();
+    dragRef.current = {
+      adId,
+      offsetX: e.clientX - rect.left,
+      offsetY: e.clientY - rect.top,
+    };
+    adEl.setPointerCapture(e.pointerId);
+  }, []);
+
+  const handleAdDragMove = useCallback((e: React.PointerEvent) => {
+    if (!dragRef.current) return;
+    const { adId, offsetX, offsetY } = dragRef.current;
+    const newX = e.clientX - offsetX;
+    const newY = e.clientY - offsetY;
+    setAds((prev) =>
+      prev.map((ad) => (ad.id === adId ? { ...ad, x: newX, y: newY } : ad))
+    );
+  }, []);
+
+  const handleAdDragEnd = useCallback(() => {
+    dragRef.current = null;
+  }, []);
 
   // Scroll container ref
   const pageRef = useRef<HTMLDivElement>(null);
@@ -318,11 +610,25 @@ export default function Home() {
     "bg-gray-300 text-black border-2 border-outset border-gray-500 px-6 py-2 font-bold cursor-pointer active:border-inset hover:bg-gray-400 font-mono";
   const retroLabel = "text-cyan-300 font-bold text-sm";
 
+  /* ─── Ad overlay (rendered in both views) ─── */
+  const adOverlay = ads.map((ad) => (
+    <InfomercialAd
+      key={ad.id}
+      ad={INFOMERCIAL_ADS[ad.adIndex]}
+      position={{ x: ad.x, y: ad.y }}
+      onDragStart={(e) => handleAdDragStart(ad.id, e)}
+      onDragMove={handleAdDragMove}
+      onDragEnd={handleAdDragEnd}
+    />
+  ));
+
   /* ─── RENDER ─── */
 
   // Newsletter view
   if (phase === 4) {
     return (
+      <>
+      {adOverlay}
       <div
         ref={pageRef}
         className="min-h-screen p-4"
@@ -447,11 +753,14 @@ export default function Home() {
           <p className="mt-1">© 1997-2026 The Worst Newsletter Ever. No rights reserved.</p>
         </div>
       </div>
+      </>
     );
   }
 
   // Form view
   return (
+    <>
+    {adOverlay}
     <div
       ref={pageRef}
       className="min-h-screen p-4 overflow-auto"
@@ -730,5 +1039,6 @@ export default function Home() {
         <p className="mt-2">© 1997-2026 The Worst Newsletter Ever</p>
       </div>
     </div>
+    </>
   );
 }

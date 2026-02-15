@@ -29,6 +29,7 @@ The app is a deliberately terrible newsletter signup experience for a "worst web
 - [x] Birthdate range expanded to year 0–9999 (absurdly wide)
 - [x] Unfade button alert chain when clicked before enabled
 - [x] Phase 3 fields also trigger fade on input
+- [x] Infomercial popup ads every 60 seconds (draggable, unremovable, persist across phases)
 
 ## Current Structure
 
