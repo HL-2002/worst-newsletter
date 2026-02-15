@@ -30,6 +30,7 @@ The app is a deliberately terrible newsletter signup experience for a "worst web
 - [x] Unfade button alert chain when clicked before enabled
 - [x] Phase 3 fields also trigger fade on input
 - [x] Infomercial popup ads every 60 seconds (draggable, unremovable, persist across phases)
+- [x] Ad close button spawns a new ad as punishment; minimize button scatters all ads randomly
 
 ## Current Structure
 

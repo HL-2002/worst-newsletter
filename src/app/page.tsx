@@ -242,12 +242,16 @@ function InfomercialAd({
   onDragStart,
   onDragMove,
   onDragEnd,
+  onClose,
+  onMinimize,
 }: {
   ad: (typeof INFOMERCIAL_ADS)[number];
   position: { x: number; y: number };
   onDragStart: (e: React.PointerEvent) => void;
   onDragMove: (e: React.PointerEvent) => void;
   onDragEnd: () => void;
+  onClose: () => void;
+  onMinimize: () => void;
 }) {
   return (
     <div
@@ -284,27 +288,51 @@ function InfomercialAd({
         <span style={{ color: "#fff", fontSize: 11, fontWeight: "bold" }}>
           ⚠️ SPECIAL OFFER ⚠️
         </span>
-        <span
-          style={{
-            background: "#c0c0c0",
-            border: "2px outset #fff",
-            width: 16,
-            height: 16,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 10,
-            fontWeight: "bold",
-            color: "#000",
-            cursor: "not-allowed",
-          }}
-          title="Nice try! This ad cannot be closed."
-          onClick={(e) => {
-            e.stopPropagation();
-            alert("🚫 Nice try! This ad is PERMANENT. Just like regret.");
-          }}
-        >
-          ✕
+        <span style={{ display: "flex", gap: 2 }}>
+          <span
+            style={{
+              background: "#c0c0c0",
+              border: "2px outset #fff",
+              width: 16,
+              height: 16,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 12,
+              fontWeight: "bold",
+              color: "#000",
+              cursor: "pointer",
+            }}
+            title="Minimize"
+            onClick={(e) => {
+              e.stopPropagation();
+              onMinimize();
+            }}
+          >
+            ─
+          </span>
+          <span
+            style={{
+              background: "#c0c0c0",
+              border: "2px outset #fff",
+              width: 16,
+              height: 16,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 10,
+              fontWeight: "bold",
+              color: "#000",
+              cursor: "pointer",
+            }}
+            title="Close"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+          >
+            ✕
+          </span>
         </span>
       </div>
       {/* Content */}
@@ -486,6 +514,26 @@ export default function Home() {
     dragRef.current = null;
   }, []);
 
+  // Close button spawns a NEW ad as punishment
+  const handleAdClose = useCallback(() => {
+    const id = adCountRef.current++;
+    const adIndex = id % INFOMERCIAL_ADS.length;
+    const x = Math.max(20, Math.min(window.innerWidth - 300, Math.random() * (window.innerWidth - 300)));
+    const y = Math.max(20, Math.min(window.innerHeight - 300, Math.random() * (window.innerHeight - 300)));
+    setAds((prev) => [...prev, { id, adIndex, x, y }]);
+  }, []);
+
+  // Minimize button scatters ALL ads to random positions
+  const handleAdMinimize = useCallback(() => {
+    setAds((prev) =>
+      prev.map((ad) => ({
+        ...ad,
+        x: Math.max(20, Math.min(window.innerWidth - 300, Math.random() * (window.innerWidth - 300))),
+        y: Math.max(20, Math.min(window.innerHeight - 300, Math.random() * (window.innerHeight - 300))),
+      }))
+    );
+  }, []);
+
   // Scroll container ref
   const pageRef = useRef<HTMLDivElement>(null);
 
@@ -619,6 +667,8 @@ export default function Home() {
       onDragStart={(e) => handleAdDragStart(ad.id, e)}
       onDragMove={handleAdDragMove}
       onDragEnd={handleAdDragEnd}
+      onClose={handleAdClose}
+      onMinimize={handleAdMinimize}
     />
   ));
 
