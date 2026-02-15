@@ -1025,7 +1025,7 @@ export default function Home() {
 
         {/* Warning 1 */}
         {validationPopupMessage && (
-          <div className="bg-fuchsia-900 border-4 border-fuchsia-400 p-4 mb-4 text-center animate-pulse">
+          <div role="alert" aria-live="assertive" className="bg-fuchsia-900 border-4 border-fuchsia-400 p-4 mb-4 text-center animate-pulse">
             <p className="text-xl text-yellow-200 font-bold">{validationPopupMessage}</p>
           </div>
         )}
