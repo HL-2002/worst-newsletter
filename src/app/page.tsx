@@ -611,27 +611,42 @@ export default function Home() {
   }, [birthDate, birthLower]);
 
   /* ─── Submit handlers ─── */
+  const requiredFieldsAlertMessage = "All required fields must be filled before proceeding.";
+  const hasEmptyField = (values: string[]) => values.some((value) => value.trim() === "");
+
   const handleSubmit1 = useCallback(() => {
+    if (hasEmptyField([firstName, lastName, email, password])) {
+      window.alert(requiredFieldsAlertMessage);
+      return;
+    }
     setShowWarning1(true);
     setTimeout(() => {
       setPhase(2);
       setShowWarning1(false);
     }, 2000);
-  }, []);
+  }, [email, firstName, lastName, password]);
 
   const handleSubmit2 = useCallback(() => {
+    if (hasEmptyField([firstName, lastName, email, password, middleName, countryPrefix])) {
+      window.alert(requiredFieldsAlertMessage);
+      return;
+    }
     setShowWarning2(true);
     generateFieldMapping();
     setTimeout(() => {
       setPhase(3);
       setShowWarning2(false);
     }, 3000);
-  }, [generateFieldMapping]);
+  }, [countryPrefix, email, firstName, generateFieldMapping, lastName, middleName, password]);
 
   const handleSubmit3 = useCallback(() => {
+    if (PHASE3_FIELDS.some((fieldName) => (phase3Values[fieldName] ?? "").trim() === "")) {
+      window.alert(requiredFieldsAlertMessage);
+      return;
+    }
     setEndTime(Date.now());
     setPhase(4);
-  }, []);
+  }, [phase3Values]);
 
   /* ─── Phase 3 click handler (alternate fields) ─── */
   const handlePhase3Click = useCallback(
