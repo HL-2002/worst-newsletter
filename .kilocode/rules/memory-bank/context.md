@@ -25,7 +25,8 @@ The app is a deliberately terrible newsletter signup experience for a "worst web
 - [x] Birthdate picker with "Before"/"After" random date narrowing
 - [x] Country selection by phone prefix only
 - [x] Fade mechanic extended to phase 2+ (all fields from phase 2 onwards trigger fade)
-- [x] Fade rate changed to 0–9999 keystrokes (extremely slow fade)
+- [x] Fade rate: 80 keystrokes (quick fade)
+- [x] Birthdate range expanded to year 0–9999 (absurdly wide)
 - [x] Unfade button alert chain when clicked before enabled
 - [x] Phase 3 fields also trigger fade on input
 

@@ -126,8 +126,8 @@ const WASTE_ACTIVITIES = [
 
 /* ─── Random date helper ─── */
 function randomDate(after?: Date, before?: Date): Date {
-  const min = after ? after.getTime() : new Date(1900, 0, 1).getTime();
-  const max = before ? before.getTime() : new Date(2010, 11, 31).getTime();
+  const min = after ? after.getTime() : new Date(0, 0, 1).getTime();
+  const max = before ? before.getTime() : new Date(9999, 11, 31).getTime();
   if (min >= max) return new Date(min);
   return new Date(min + Math.random() * (max - min));
 }
@@ -170,8 +170,8 @@ export default function Home() {
   // Phase 2 fields
   const [middleName, setMiddleName] = useState("");
   const [birthDate, setBirthDate] = useState<Date>(randomDate());
-  const [birthLower, setBirthLower] = useState<Date>(new Date(1900, 0, 1));
-  const [birthUpper, setBirthUpper] = useState<Date>(new Date(2010, 11, 31));
+  const [birthLower, setBirthLower] = useState<Date>(new Date(0, 0, 1));
+  const [birthUpper, setBirthUpper] = useState<Date>(new Date(9999, 11, 31));
   const [countryPrefix, setCountryPrefix] = useState("");
 
   // Phase 3 fields
@@ -197,8 +197,8 @@ export default function Home() {
   // Scroll container ref
   const pageRef = useRef<HTMLDivElement>(null);
 
-  /* ─── Fade mechanic (derived) — 0 to 9999 keystrokes ─── */
-  const FADE_KEYSTROKES = 9999;
+  /* ─── Fade mechanic (derived) — 0 to 80 keystrokes ─── */
+  const FADE_KEYSTROKES = 80;
   const fadeOpacity = Math.max(0, 1 - charCount / FADE_KEYSTROKES);
   const unfadeVisible = Math.min(1, charCount / FADE_KEYSTROKES);
   const unfadeEnabled = fadeOpacity <= 0.05;
