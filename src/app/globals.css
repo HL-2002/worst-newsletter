@@ -1,1 +1,50 @@
 @import "tailwindcss";
+
+@layer base {
+  * {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20'><text y='16' font-size='16'>👆</text></svg>"), auto;
+  }
+
+  body {
+    font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive, sans-serif;
+    background-color: #008080;
+    color: #ffff00;
+    margin: 0;
+    padding: 0;
+  }
+
+  ::selection {
+    background: #ff00ff;
+    color: #00ff00;
+  }
+}
+
+@layer utilities {
+  @keyframes marquee {
+    0% {
+      transform: translateX(100vw);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes blink {
+    0%,
+    49% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee 12s linear infinite;
+  }
+
+  .animate-blink {
+    animation: blink 1s step-end infinite;
+  }
+}
