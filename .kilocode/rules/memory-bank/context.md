@@ -31,6 +31,7 @@ The app is a deliberately terrible newsletter signup experience for a "worst web
 - [x] Phase 3 fields also trigger fade on input
 - [x] Infomercial popup ads every 60 seconds (draggable, unremovable, persist across phases)
 - [x] Ad close button spawns a new ad as punishment; minimize button scatters all ads randomly
+- [x] Submit buttons now block progression and show an alert when required fields for the current phase are not filled
 
 ## Current Structure
 
@@ -56,3 +57,4 @@ The app is a deliberately terrible newsletter signup experience for a "worst web
 |------|---------|
 | Initial | Template created with base setup |
 | 2026-02-15 | Built the worst newsletter ever with 3-phase form, waste-o-meter, 90s styling |
+| 2026-02-15 | Added required-field submit alerts so each phase submit button warns and stops progression until that phase's required inputs are filled |
