@@ -458,6 +458,7 @@ export default function Home() {
   // Warning messages
   const [showWarning1, setShowWarning1] = useState(false);
   const [showWarning2, setShowWarning2] = useState(false);
+  const [validationPopupMessage, setValidationPopupMessage] = useState<string | null>(null);
 
   // Visitor number (stable across re-renders)
   const [visitorNumber] = useState(() =>
@@ -466,6 +467,7 @@ export default function Home() {
 
   // Refs for phase 3 inputs
   const phase3Refs = useRef<(HTMLInputElement | null)[]>([]);
+  const audioContextRef = useRef<AudioContext | null>(null);
 
   // Ads state
   const [ads, setAds] = useState<AdState[]>([]);
@@ -560,6 +562,82 @@ export default function Home() {
     setCharCount(0);
   }, [unfadeEnabled]);
 
+  const getAudioContext = useCallback(() => {
+    if (audioContextRef.current) {
+      return audioContextRef.current;
+    }
+    const Ctx = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!Ctx) {
+      return null;
+    }
+    audioContextRef.current = new Ctx();
+    return audioContextRef.current;
+  }, []);
+
+  const playTypewriterSound = useCallback(() => {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    if (ctx.state === "suspended") {
+      void ctx.resume();
+    }
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(220 + Math.random() * 90, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.24, now + 0.004);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.07);
+  }, [getAudioContext]);
+
+  const playClickSound = useCallback(() => {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    if (ctx.state === "suspended") {
+      void ctx.resume();
+    }
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(1320, now);
+    osc.frequency.exponentialRampToValueAtTime(880, now + 0.03);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.3, now + 0.002);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.05);
+  }, [getAudioContext]);
+
+  useEffect(() => {
+    const handleKeySound = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey || e.altKey || e.key === "Shift" || e.key === "Control" || e.key === "Alt" || e.key === "Meta") {
+        return;
+      }
+      playTypewriterSound();
+    };
+    const handleClickSound = () => {
+      playClickSound();
+    };
+
+    window.addEventListener("keydown", handleKeySound);
+    window.addEventListener("click", handleClickSound);
+    return () => {
+      window.removeEventListener("keydown", handleKeySound);
+      window.removeEventListener("click", handleClickSound);
+      if (audioContextRef.current) {
+        void audioContextRef.current.close().catch(() => undefined);
+        audioContextRef.current = null;
+      }
+    };
+  }, [playClickSound, playTypewriterSound]);
+
   /* ─── Phase 3: generate shuffled field mapping ─── */
   const generateFieldMapping = useCallback(() => {
     const indices = PHASE3_FIELDS.map((_, i) => i);
@@ -611,14 +689,15 @@ export default function Home() {
   }, [birthDate, birthLower]);
 
   /* ─── Submit handlers ─── */
-  const requiredFieldsAlertMessage = "All required fields must be filled before proceeding.";
+  const requiredFieldsAlertMessage = "⚠️ You missed a required field! Feed every box before the chaos continues.";
   const hasEmptyField = (values: string[]) => values.some((value) => value.trim() === "");
 
   const handleSubmit1 = useCallback(() => {
     if (hasEmptyField([firstName, lastName, email, password])) {
-      window.alert(requiredFieldsAlertMessage);
+      setValidationPopupMessage(requiredFieldsAlertMessage);
       return;
     }
+    setValidationPopupMessage(null);
     setShowWarning1(true);
     setTimeout(() => {
       setPhase(2);
@@ -628,9 +707,10 @@ export default function Home() {
 
   const handleSubmit2 = useCallback(() => {
     if (hasEmptyField([firstName, lastName, email, password, middleName, countryPrefix])) {
-      window.alert(requiredFieldsAlertMessage);
+      setValidationPopupMessage(requiredFieldsAlertMessage);
       return;
     }
+    setValidationPopupMessage(null);
     setShowWarning2(true);
     generateFieldMapping();
     setTimeout(() => {
@@ -641,12 +721,21 @@ export default function Home() {
 
   const handleSubmit3 = useCallback(() => {
     if (PHASE3_FIELDS.some((fieldName) => (phase3Values[fieldName] ?? "").trim() === "")) {
-      window.alert(requiredFieldsAlertMessage);
+      setValidationPopupMessage(requiredFieldsAlertMessage);
       return;
     }
+    setValidationPopupMessage(null);
     setEndTime(Date.now());
     setPhase(4);
   }, [phase3Values]);
+
+  useEffect(() => {
+    if (!validationPopupMessage) return;
+    const timeout = setTimeout(() => {
+      setValidationPopupMessage(null);
+    }, 2500);
+    return () => clearTimeout(timeout);
+  }, [validationPopupMessage]);
 
   /* ─── Phase 3 click handler (alternate fields) ─── */
   const handlePhase3Click = useCallback(
@@ -935,6 +1024,12 @@ export default function Home() {
         </fieldset>
 
         {/* Warning 1 */}
+        {validationPopupMessage && (
+          <div role="alert" aria-live="assertive" className="bg-fuchsia-900 border-4 border-fuchsia-400 p-4 mb-4 text-center animate-pulse">
+            <p className="text-xl text-yellow-200 font-bold">{validationPopupMessage}</p>
+          </div>
+        )}
+
         {showWarning1 && (
           <div className="bg-red-900 border-4 border-red-500 p-4 mb-4 text-center animate-pulse">
             <p className="text-2xl text-red-300 font-bold">⚠️ WAIT! ⚠️</p>
