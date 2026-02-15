@@ -632,7 +632,7 @@ export default function Home() {
       window.removeEventListener("keydown", handleKeySound);
       window.removeEventListener("click", handleClickSound);
       if (audioContextRef.current) {
-        void audioContextRef.current.close();
+        void audioContextRef.current.close().catch(() => undefined);
         audioContextRef.current = null;
       }
     };
